@@ -1,11 +1,32 @@
 import React, { useState } from 'react';
+import hexCodes from './data/hexProvider'
+import hexConverter from './util/hexConverter'
 import './App.css';
 
 function App() {
-  const [colors, setColors] = useState([])
-  const possibleColors = ['black', 'silver', 'gray', 'maroon', 'red',
-    'purple', 'fuchsia', 'green', 'lime', 'olive',
-    'yellow', 'navy', 'blue', 'teal', 'aqua']
+  const randomHex = () => {
+    const options = ['0', '1', '2', '3', '4', '5', '6',
+      '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+    return options[Math.floor(Math.random() * options.length)]
+  }
+
+  console.log(hexConverter(hexCodes[Math.floor(Math.random() * hexCodes.length)].code))
+
+  const generateHexColorCode = () => {
+    let hex = '#'
+    for (let i = 0; i < 6; i++) {
+      hex += randomHex()
+    }
+    console.log(hex + recognizeColor(hex))
+    return hex
+  }
+
+  const recognizeColor = hex => {
+    let colorEstimate = 'green'
+    return '...is probably shade of ' + colorEstimate
+  }
+
+  const [colors, setColors] = useState([generateHexColorCode(), generateHexColorCode(), generateHexColorCode()])
 
   const generateStyleObj = index => {
     const styleObj = {
@@ -16,9 +37,7 @@ function App() {
 
   const handleRandomize = () => {
     const newColors = [
-      possibleColors[Math.floor(Math.random() * possibleColors.length)],
-      possibleColors[Math.floor(Math.random() * possibleColors.length)],
-      possibleColors[Math.floor(Math.random() * possibleColors.length)]
+      generateHexColorCode(), generateHexColorCode(), generateHexColorCode()
     ]
     setColors(newColors)
   }
