@@ -3,7 +3,7 @@
  * @param {*} hex RGB -code of color
  */
 
-const hexConterver = hex => {
+const hexConverter = hex => {
   const first = hex.substring(1, 3)
   const second = hex.substring(3, 5)
   const third = hex.substring(5)
@@ -27,4 +27,4 @@ const hexConterver = hex => {
   return [parseIntFromHex(first), parseIntFromHex(second), parseIntFromHex(third)]
 }
 
-export default hexConterver
+export default hexConverter

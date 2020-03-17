@@ -10,23 +10,43 @@ function App() {
     return options[Math.floor(Math.random() * options.length)]
   }
 
-  console.log(hexConverter(hexCodes[Math.floor(Math.random() * hexCodes.length)].code))
-
   const generateHexColorCode = () => {
     let hex = '#'
     for (let i = 0; i < 6; i++) {
       hex += randomHex()
     }
-    console.log(hex + recognizeColor(hex))
     return hex
   }
 
-  const recognizeColor = hex => {
-    let colorEstimate = 'green'
-    return '...is probably shade of ' + colorEstimate
+  const [colors, setColors] = useState([generateHexColorCode(), generateHexColorCode(), generateHexColorCode(),
+  generateHexColorCode(), generateHexColorCode(), generateHexColorCode()])
+
+  const [closestColor, setClosestColor] = useState(null)
+
+  const calculateDifference = (hex1, hex2) => {
+    const rgb1 = hexConverter(hex1)
+    const rgb2 = hexConverter(hex2)
+    const diff = Math.abs(rgb1[0] - rgb2[0]) + Math.abs(rgb1[1] - rgb2[1]) + Math.abs(rgb1[2] - rgb2[2])
+    return diff
   }
 
-  const [colors, setColors] = useState([generateHexColorCode(), generateHexColorCode(), generateHexColorCode()])
+  /**
+   * placeholder
+   * @param {*} hex 
+   */
+  const recognizeColor = () => {
+    let indexOfClosest = 0
+    let smallestDiff = calculateDifference(colors[0], hexCodes[0].code)
+    for (let i = 0; i < hexCodes.length; i++) {
+      const currDiff = calculateDifference(colors[0], hexCodes[i].code)
+      if (currDiff < smallestDiff) {
+        indexOfClosest = i
+        smallestDiff = currDiff
+      }
+    }
+    setClosestColor(hexCodes[indexOfClosest])
+  }
+
 
   const generateStyleObj = index => {
     const styleObj = {
@@ -36,9 +56,7 @@ function App() {
   }
 
   const handleRandomize = () => {
-    const newColors = [
-      generateHexColorCode(), generateHexColorCode(), generateHexColorCode()
-    ]
+    const newColors = colors.map(c => generateHexColorCode())
     setColors(newColors)
   }
 
@@ -48,6 +66,9 @@ function App() {
         <span style={generateStyleObj(0)}>foo</span>
         <span style={generateStyleObj(1)}>bar</span>
         <span style={generateStyleObj(2)}>baz</span>
+        <span style={generateStyleObj(3)}>foo</span>
+        <span style={generateStyleObj(4)}>bar</span>
+        <span style={generateStyleObj(5)}>baz</span>
       </div>
     )
   }
@@ -55,6 +76,20 @@ function App() {
     <div className='App'>
       <Row />
       <button onClick={handleRandomize}>Randomize</button>
+
+      <div className='color-row'>
+        {closestColor === null ?
+          <span>Not yet recognized</span> :
+          <div>
+            <span>closest to {colors[0]} is {closestColor.name} </span>
+            <span style={{ background: closestColor.code }}>foo</span>
+            <div>
+              <span>with hex  {closestColor.code}</span>
+            </div>
+          </div>
+        }
+      </div>
+      <button onClick={recognizeColor}>Recognize first</button>
     </div>
   );
 }
