@@ -1,39 +1,15 @@
 import React, { useState } from 'react';
+
 import hexCodes from './data/hexProvider'
-import hexConverter from './util/hexConverter'
+import { generateHexColorCode, calculateDifference } from './util/hexUtil'
 import './App.css';
 
 function App() {
-  const randomHex = () => {
-    const options = ['0', '1', '2', '3', '4', '5', '6',
-      '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
-    return options[Math.floor(Math.random() * options.length)]
-  }
-
-  const generateHexColorCode = () => {
-    let hex = '#'
-    for (let i = 0; i < 6; i++) {
-      hex += randomHex()
-    }
-    return hex
-  }
-
   const [colors, setColors] = useState([generateHexColorCode(), generateHexColorCode(), generateHexColorCode(),
   generateHexColorCode(), generateHexColorCode(), generateHexColorCode()])
 
   const [closestColor, setClosestColor] = useState(null)
 
-  const calculateDifference = (hex1, hex2) => {
-    const rgb1 = hexConverter(hex1)
-    const rgb2 = hexConverter(hex2)
-    const diff = Math.abs(rgb1[0] - rgb2[0]) + Math.abs(rgb1[1] - rgb2[1]) + Math.abs(rgb1[2] - rgb2[2])
-    return diff
-  }
-
-  /**
-   * placeholder
-   * @param {*} hex 
-   */
   const recognizeColor = () => {
     let indexOfClosest = 0
     let smallestDiff = calculateDifference(colors[0], hexCodes[0].code)
@@ -47,7 +23,6 @@ function App() {
     setClosestColor(hexCodes[indexOfClosest])
   }
 
-
   const generateStyleObj = index => {
     const styleObj = {
       background: colors[index],
@@ -56,7 +31,7 @@ function App() {
   }
 
   const handleRandomize = () => {
-    const newColors = colors.map(c => generateHexColorCode())
+    const newColors = colors.map(c => generateHexColorCode(c))
     setColors(newColors)
   }
 
@@ -72,6 +47,7 @@ function App() {
       </div>
     )
   }
+  
   return (
     <div className='App'>
       <Row />

@@ -27,4 +27,26 @@ const hexConverter = hex => {
   return [parseIntFromHex(first), parseIntFromHex(second), parseIntFromHex(third)]
 }
 
-export default hexConverter
+const options = ['0', '1', '2', '3', '4', '5', '6',
+  '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+
+const randomHex = () => {
+  return options[Math.floor(Math.random() * options.length)]
+}
+
+const generateHexColorCode = () => {
+  let hex = '#'
+  for (let i = 0; i < 6; i++) {
+    hex += randomHex()
+  }
+  return hex
+}
+
+const calculateDifference = (hex1, hex2) => {
+  const rgb1 = hexConverter(hex1)
+  const rgb2 = hexConverter(hex2)
+  const diff = Math.abs(rgb1[0] - rgb2[0]) + Math.abs(rgb1[1] - rgb2[1]) + Math.abs(rgb1[2] - rgb2[2])
+  return diff
+}
+
+export { hexConverter, generateHexColorCode, calculateDifference }
