@@ -1,7 +1,4 @@
-/**
- * Utility for splitting RGB Hex -codes into into decimal RGB -values
- * @param {*} hex RGB -code of color
- */
+import hexCodes from "../data/hexProvider";
 
 const hexConverter = hex => {
   const first = hex.substring(1, 3)
@@ -49,4 +46,34 @@ const calculateDifference = (hex1, hex2) => {
   return diff
 }
 
-export { hexConverter, generateHexColorCode, calculateDifference }
+const findClosest = (hex) => {
+  let indexOfClosest = 0;
+  let smallestDiff = calculateDifference(hex, hexCodes[0].code)
+  for (let i = 0; i < hexCodes.length; i++) {
+    const currDiff = calculateDifference(hex, hexCodes[i].code);
+    if (currDiff < smallestDiff) {
+      indexOfClosest = i;
+      smallestDiff = currDiff;
+    }
+  }
+  return hexCodes[indexOfClosest];
+}
+
+const findMultipleClosest = (hex, amount) => {
+  const found = [hex]
+  while (found.length < amount) {
+    let smallestDiff = calculateDifference(hex, hexCodes[0].code);
+    let indexOfClosest = 0;
+    for (let i = 0; i < hexCodes.length; i++) {
+      const currDiff = calculateDifference(hex, hexCodes[i].code)
+      if (currDiff < smallestDiff && !found.includes(hexCodes[i].code)) {
+        indexOfClosest = i;
+        smallestDiff = currDiff;
+      }
+    }
+    found.push(hexCodes[indexOfClosest].code)
+  }
+  return found;
+}
+
+export { hexConverter, generateHexColorCode, calculateDifference, findClosest, findMultipleClosest }
